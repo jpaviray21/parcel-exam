@@ -37,7 +37,7 @@ public class ParcelServiceImpl implements IParcelService{
 			if(rule.getLimits()<req.getWeight() && rule.getCharge()==null) {
 				throw new ParcelRejectedException(req.getWeight(), rule.getLimits());
 
-			}else if(rule.getLimits()<req.getWeight() && rule.getCharge()!=null) {
+			}else if(rule.getLimits()<req.getWeight()) {
 				response.setParcelCategorization(rule.getRuleName());
 				response.setDeliveryCost(calculateCharge(rule.getCharge(),req.getWeight()));
 				return applyVoucher(req.getVoucher(),response);
@@ -50,13 +50,9 @@ public class ParcelServiceImpl implements IParcelService{
 		for(RuleEntity rule:sortedvolumeRules)	{		
 			
 			if(rule.getLimits()==null) {
-				System.out.println("Comparing " + sortedvolumeRules.get(sortedvolumeRules.size()-1).getLimits()
-				+ " is Less Than " + volume);
-				if(sortedvolumeRules.get(sortedvolumeRules.size()-1).getLimits()<volume) {
-					response.setParcelCategorization(rule.getRuleName());
-					response.setDeliveryCost(calculateCharge(rule.getCharge(),volume));
-					return applyVoucher(req.getVoucher(),response);
-				}	
+				response.setParcelCategorization(rule.getRuleName());
+				response.setDeliveryCost(calculateCharge(rule.getCharge(),volume));
+				return applyVoucher(req.getVoucher(),response);
 			}else {
 				System.out.println("Comparing " + rule.getLimits()
 				+ " is Greater Than " + volume);
@@ -74,7 +70,7 @@ public class ParcelServiceImpl implements IParcelService{
 	
 	private CalculateResponseDto applyVoucher(String voucherCode, CalculateResponseDto response) {
 		
-		if(voucherCode!=null && voucherCode != "") {
+		if(voucherCode != "") {
 			VoucherResponseDto voucherDto = iVoucherService.getVoucherDetails(voucherCode);
 			
 			response.setDiscount(voucherDto.getDiscount());

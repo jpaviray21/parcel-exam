@@ -217,7 +217,7 @@ public class RuleServiceImpl implements IRuleService{
 		
 		ruleRepository.deleteById(ruleId);
 		
-	}
+	}	
 	
 	private void validateIfRuleNameExists(String ruleName, List<RuleEntity> rules) {
 		if(!rules.stream().filter(r->r.getRuleName().equals(ruleName)).toList().isEmpty())
@@ -233,6 +233,5 @@ public class RuleServiceImpl implements IRuleService{
 		if(!rules.stream().filter(r->r.getLimits().equals(ruleLimit)).toList().isEmpty())
 			throw new RuleLimitExistsException(ruleLimit.toString());
 	}
-
 
 }
